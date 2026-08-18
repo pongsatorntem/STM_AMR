@@ -18,6 +18,7 @@
 STM_AMR/
   README.md
   docs/
+    BOM_STM_AMR.xlsx
     manuals/
       AW-S24AF-AT.pdf
       Voice Announcer User Manual (24A Series).pdf
@@ -41,6 +42,10 @@ STM_AMR/
 | Speaker RS485 B | Module B | Speaker B- | ถ้าสื่อสารไม่ได้ ลองสลับ A/B |
 
 รายละเอียดวงจรอยู่ที่ [docs/wiring.md](docs/wiring.md)
+
+## BOM
+
+- [docs/BOM_STM_AMR.xlsx](docs/BOM_STM_AMR.xlsx) - Excel BOM แบบ minimal เฉพาะอุปกรณ์ที่ใช้จริงตอนนี้, wiring summary, และ commissioning checklist
 
 ## Diagrams
 
