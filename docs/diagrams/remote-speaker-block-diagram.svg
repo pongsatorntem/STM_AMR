@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1150" viewBox="0 0 1800 1150">
+  <defs>
+    <style>
+      .bg { fill: #f7f8fb; }
+      .title { font-family: 'Segoe UI', Tahoma, sans-serif; font-size: 42px; font-weight: 700; fill: #172033; }
+      .subtitle { font-family: 'Segoe UI', Tahoma, sans-serif; font-size: 24px; fill: #536072; }
+      .device { fill: #ffffff; stroke: #2f5f8f; stroke-width: 3; rx: 18; }
+      .arduino { fill: #eaf4ff; stroke: #1f6fb2; stroke-width: 3; rx: 18; }
+      .logic { fill: #fff8e6; stroke: #b7791f; stroke-width: 3; rx: 14; }
+      .speaker { fill: #f2efff; stroke: #6b46c1; stroke-width: 3; rx: 18; }
+      .serial { fill: #eefcf3; stroke: #2f855a; stroke-width: 3; rx: 18; }
+      .danger { fill: #fff0f0; stroke: #c53030; stroke-width: 3; rx: 18; }
+      .text { font-family: 'Segoe UI', Tahoma, sans-serif; font-size: 24px; fill: #172033; }
+      .small { font-family: 'Segoe UI', Tahoma, sans-serif; font-size: 19px; fill: #3e4c5f; }
+      .tiny { font-family: 'Segoe UI', Tahoma, sans-serif; font-size: 16px; fill: #536072; }
+      .label { font-family: 'Segoe UI', Tahoma, sans-serif; font-size: 18px; font-weight: 700; fill: #172033; }
+      .arrow { stroke: #34445a; stroke-width: 3; fill: none; marker-end: url(#arrowhead); }
+      .bus { stroke: #6b46c1; stroke-width: 4; fill: none; marker-end: url(#arrowheadPurple); }
+      .serialLine { stroke: #2f855a; stroke-width: 4; fill: none; marker-end: url(#arrowheadGreen); }
+      .noteLine { stroke: #65758b; stroke-width: 2; fill: none; stroke-dasharray: 8 7; }
+    </style>
+    <marker id="arrowhead" markerWidth="14" markerHeight="10" refX="12" refY="5" orient="auto">
+      <path d="M0,0 L14,5 L0,10 Z" fill="#34445a" />
+    </marker>
+    <marker id="arrowheadPurple" markerWidth="14" markerHeight="10" refX="12" refY="5" orient="auto">
+      <path d="M0,0 L14,5 L0,10 Z" fill="#6b46c1" />
+    </marker>
+    <marker id="arrowheadGreen" markerWidth="14" markerHeight="10" refX="12" refY="5" orient="auto">
+      <path d="M0,0 L14,5 L0,10 Z" fill="#2f855a" />
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1800" height="1150" />
+
+  <text class="title" x="90" y="80">STM AMR Remote + Speaker Block Diagram</text>
+  <text class="subtitle" x="90" y="120">Inputs, controller logic, RS485 command path, and manual test path</text>
+
+  <rect class="device" x="90" y="210" width="360" height="265" />
+  <text class="text" x="145" y="255">Crane Remote Receiver</text>
+  <text class="small" x="145" y="300">Relay outputs, active HIGH</text>
+  <text class="small" x="145" y="335">START / Orange</text>
+  <text class="small" x="145" y="365">UP / actual UP output</text>
+  <text class="small" x="145" y="395">DOWN / actual DOWN output</text>
+  <text class="tiny" x="145" y="435">Each line: R 1k series + 10k pull-down to Arduino GND</text>
+
+  <rect class="serial" x="90" y="610" width="360" height="215" />
+  <text class="text" x="145" y="655">PC Serial Monitor</text>
+  <text class="small" x="145" y="700">USB Serial: 115200</text>
+  <text class="small" x="145" y="735">1..255 = play one sound</text>
+  <text class="small" x="145" y="765">v0..v28 = set volume</text>
+  <text class="small" x="145" y="795">u / d = simulate sequence</text>
+
+  <rect class="arduino" x="650" y="175" width="520" height="735" />
+  <text class="text" x="760" y="225">Arduino Mega 2560</text>
+  <text class="small" x="730" y="265">Firmware: speaker_serial_test.ino</text>
+
+  <rect class="logic" x="710" y="310" width="400" height="105" />
+  <text class="text" x="785" y="350">Input Layer</text>
+  <text class="small" x="750" y="385">D45 START, D46 UP, D47 DOWN</text>
+
+  <rect class="logic" x="710" y="455" width="400" height="125" />
+  <text class="text" x="775" y="495">Safety + State Machine</text>
+  <text class="small" x="750" y="530">WAIT_START, ARMED, PLAYING, FAULT</text>
+  <text class="small" x="750" y="560">reject UP+DOWN, STOP resets to WAIT_START</text>
+
+  <rect class="logic" x="710" y="620" width="400" height="125" />
+  <text class="text" x="770" y="660">Sound Sequence Engine</text>
+  <text class="small" x="750" y="695">UP: AW001..AW005</text>
+  <text class="small" x="750" y="725">DOWN: AW006..AW010</text>
+
+  <rect class="logic" x="710" y="785" width="400" height="95" />
+  <text class="text" x="770" y="825">Speaker Packet Builder</text>
+  <text class="small" x="750" y="855">01 51 folder 00 volume xor 02</text>
+
+  <rect class="speaker" x="1330" y="285" width="360" height="185" />
+  <text class="text" x="1385" y="330">TTL to RS485 Module</text>
+  <text class="small" x="1385" y="375">Arduino Serial3</text>
+  <text class="small" x="1385" y="405">TX3 D14 / RX3 D15</text>
+  <text class="small" x="1385" y="435">9600 8N1</text>
+
+  <rect class="speaker" x="1330" y="620" width="360" height="220" />
+  <text class="text" x="1400" y="665">Voice Speaker</text>
+  <text class="small" x="1385" y="710">RS485 A+ / B-</text>
+  <text class="small" x="1385" y="740">Folders AW001..AW255</text>
+  <text class="small" x="1385" y="770">Volume 0..28</text>
+  <text class="small" x="1385" y="800">Folder 0 = stop</text>
+
+  <rect class="danger" x="90" y="910" width="1600" height="130" />
+  <text class="text" x="140" y="955">Important notes</text>
+  <text class="small" x="140" y="990">Remote commands require START first. Old latched UP/DOWN state is saved as baseline, so it does not fire immediately after START.</text>
+  <text class="small" x="140" y="1020">The speaker manual does not provide a confirmed sound-finished event, so sequence timing is controlled by UP_SOUND_MS[] / DOWN_SOUND_MS[].</text>
+
+  <path class="arrow" d="M450 330 C560 330 565 360 710 360" />
+  <text class="label" x="485" y="300">D45/D46/D47 inputs</text>
+
+  <path class="serialLine" d="M450 715 C555 715 585 815 710 835" />
+  <text class="label" x="480" y="760">USB Serial commands</text>
+
+  <path class="arrow" d="M910 415 L910 455" />
+  <path class="arrow" d="M910 580 L910 620" />
+  <path class="arrow" d="M910 745 L910 785" />
+
+  <path class="bus" d="M1110 835 C1230 835 1210 380 1330 380" />
+  <text class="label" x="1160" y="560">Serial3 packet</text>
+
+  <path class="bus" d="M1510 470 L1510 620" />
+  <text class="label" x="1530" y="550">RS485 A/B</text>
+
+  <path class="noteLine" d="M1170 520 C1260 520 1265 715 1330 730" />
+  <text class="tiny" x="1190" y="705">speaker reply is printed as RX hex</text>
+
+  <rect class="device" x="1240" y="105" width="450" height="95" />
+  <text class="small" x="1275" y="145">Remote trigger result</text>
+  <text class="tiny" x="1275" y="175">UP = sounds 1-5, DOWN = sounds 6-10, then stop</text>
+</svg>

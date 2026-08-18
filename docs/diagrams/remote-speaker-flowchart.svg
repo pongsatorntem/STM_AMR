@@ -1,0 +1,159 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="2300" viewBox="0 0 1800 2300">
+  <defs>
+    <style>
+      .bg { fill: #f7f8fb; }
+      .title { font-family: 'Segoe UI', Tahoma, sans-serif; font-size: 42px; font-weight: 700; fill: #172033; }
+      .subtitle { font-family: 'Segoe UI', Tahoma, sans-serif; font-size: 24px; fill: #536072; }
+      .box { fill: #ffffff; stroke: #2f5f8f; stroke-width: 3; rx: 18; }
+      .state { fill: #eaf4ff; stroke: #1f6fb2; stroke-width: 3; rx: 18; }
+      .decision { fill: #fff8e6; stroke: #b7791f; stroke-width: 3; }
+      .fault { fill: #fff0f0; stroke: #c53030; stroke-width: 3; rx: 18; }
+      .serial { fill: #eefcf3; stroke: #2f855a; stroke-width: 3; rx: 18; }
+      .speaker { fill: #f2efff; stroke: #6b46c1; stroke-width: 3; rx: 18; }
+      .text { font-family: 'Segoe UI', Tahoma, sans-serif; font-size: 24px; fill: #172033; }
+      .small { font-family: 'Segoe UI', Tahoma, sans-serif; font-size: 19px; fill: #3e4c5f; }
+      .tiny { font-family: 'Segoe UI', Tahoma, sans-serif; font-size: 16px; fill: #536072; }
+      .label { font-family: 'Segoe UI', Tahoma, sans-serif; font-size: 19px; font-weight: 600; fill: #172033; }
+      .arrow { stroke: #34445a; stroke-width: 3; fill: none; marker-end: url(#arrowhead); }
+      .dash { stroke: #65758b; stroke-width: 3; fill: none; stroke-dasharray: 10 8; marker-end: url(#arrowhead); }
+    </style>
+    <marker id="arrowhead" markerWidth="14" markerHeight="10" refX="12" refY="5" orient="auto">
+      <path d="M0,0 L14,5 L0,10 Z" fill="#34445a" />
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1800" height="2300" />
+
+  <text class="title" x="90" y="80">STM AMR Remote + Speaker Flowchart</text>
+  <text class="subtitle" x="90" y="120">Arduino Mega: remote START/UP/DOWN + Serial Monitor + RS485 voice speaker</text>
+
+  <rect class="box" x="620" y="170" width="560" height="115" />
+  <text class="text" x="690" y="215">Power on / Reset</text>
+  <text class="small" x="690" y="250">setup(): Serial, Serial3, D45, D46, D47</text>
+
+  <rect class="box" x="620" y="340" width="560" height="145" />
+  <text class="text" x="690" y="385">Main loop repeats</text>
+  <text class="small" x="690" y="420">1. Debounce inputs</text>
+  <text class="small" x="690" y="450">2. Read Serial Monitor</text>
+  <text class="small" x="690" y="480">3. Read speaker reply</text>
+
+  <polygon class="decision" points="900,555 1180,685 900,815 620,685" />
+  <text class="text" x="785" y="670">Safety problem?</text>
+  <text class="small" x="735" y="705">UP+DOWN together only</text>
+
+  <rect class="fault" x="1240" y="610" width="430" height="150" />
+  <text class="text" x="1300" y="655">Enter FAULT</text>
+  <text class="small" x="1300" y="690">stop sequence</text>
+  <text class="small" x="1300" y="720">send speaker stop folder 0</text>
+
+  <rect class="fault" x="1240" y="455" width="430" height="110" />
+  <text class="text" x="1300" y="500">STOP / D45 LOW</text>
+  <text class="small" x="1300" y="535">speaker stop, state = WAIT_START</text>
+
+  <polygon class="decision" points="1455,825 1665,925 1455,1025 1245,925" />
+  <text class="text" x="1365" y="915">Safe to clear?</text>
+  <text class="small" x="1338" y="950">START active, selection valid</text>
+
+  <rect class="state" x="1215" y="1085" width="480" height="110" />
+  <text class="text" x="1300" y="1130">Clear fault</text>
+  <text class="small" x="1300" y="1165">state = ARMED, save baseline</text>
+
+  <polygon class="decision" points="900,885 1160,1005 900,1125 640,1005" />
+  <text class="text" x="805" y="990">Current state?</text>
+  <text class="small" x="760" y="1025">WAIT_START / ARMED / PLAYING</text>
+
+  <rect class="state" x="115" y="930" width="430" height="150" />
+  <text class="text" x="195" y="975">WAIT_START</text>
+  <text class="small" x="175" y="1010">remote command locked</text>
+  <text class="small" x="175" y="1040">wait for START rising edge</text>
+
+  <polygon class="decision" points="330,1140 520,1235 330,1330 140,1235" />
+  <text class="text" x="240" y="1225">START pressed?</text>
+  <text class="small" x="230" y="1260">D45 goes active</text>
+
+  <rect class="state" x="605" y="1175" width="590" height="130" />
+  <text class="text" x="705" y="1220">ARMED</text>
+  <text class="small" x="705" y="1255">save current UP/DOWN as baseline</text>
+  <text class="small" x="705" y="1285">prevents old latched command from firing</text>
+
+  <polygon class="decision" points="900,1375 1175,1505 900,1635 625,1505" />
+  <text class="text" x="755" y="1490">Remote selection changed?</text>
+  <text class="small" x="755" y="1525">NONE / UP / DOWN / INVALID</text>
+
+  <rect class="speaker" x="230" y="1715" width="500" height="155" />
+  <text class="text" x="305" y="1760">UP selected</text>
+  <text class="small" x="305" y="1795">start sequence AW001..AW005</text>
+  <text class="small" x="305" y="1825">state = PLAYING_SEQUENCE</text>
+
+  <rect class="speaker" x="1070" y="1715" width="500" height="155" />
+  <text class="text" x="1145" y="1760">DOWN selected</text>
+  <text class="small" x="1145" y="1795">start sequence AW006..AW010</text>
+  <text class="small" x="1145" y="1825">state = PLAYING_SEQUENCE</text>
+
+  <rect class="speaker" x="625" y="1925" width="550" height="180" />
+  <text class="text" x="720" y="1970">Sequence engine</text>
+  <text class="small" x="700" y="2005">when time arrives: send next folder</text>
+  <text class="small" x="700" y="2035">wait duration from *_SOUND_MS[]</text>
+  <text class="small" x="700" y="2065">after final sound: send folder 0 stop</text>
+
+  <rect class="serial" x="90" y="360" width="430" height="190" />
+  <text class="text" x="150" y="405">Serial Monitor path</text>
+  <text class="small" x="150" y="440">number 1..255: play one folder</text>
+  <text class="small" x="150" y="470">0: stop</text>
+  <text class="small" x="150" y="500">v0..v28: set volume</text>
+  <text class="small" x="150" y="530">u/d: simulate sequence</text>
+
+  <rect class="speaker" x="90" y="610" width="430" height="150" />
+  <text class="text" x="155" y="655">Manual sound command</text>
+  <text class="small" x="155" y="690">cancel active sequence first</text>
+  <text class="small" x="155" y="720">send one RS485 packet</text>
+
+  <rect class="speaker" x="1250" y="1965" width="430" height="130" />
+  <text class="text" x="1315" y="2010">Speaker packet</text>
+  <text class="small" x="1315" y="2045">01 51 folder 00 volume xor 02</text>
+  <text class="small" x="1315" y="2075">Serial3 9600 8N1 via RS485</text>
+
+  <path class="arrow" d="M900 285 L900 340" />
+  <path class="arrow" d="M900 485 L900 555" />
+  <path class="arrow" d="M1180 685 L1240 685" />
+  <text class="label" x="1195" y="660">YES</text>
+  <path class="arrow" d="M1455 760 L1455 825" />
+  <path class="arrow" d="M1455 1025 L1455 1085" />
+  <text class="label" x="1485" y="1065">YES</text>
+  <path class="dash" d="M1695 925 C1760 925 1760 340 1180 410" />
+  <text class="label" x="1590" y="885">NO</text>
+  <path class="dash" d="M1215 1140 C1040 1140 1040 1305 900 1375" />
+
+  <path class="arrow" d="M900 815 L900 885" />
+  <text class="label" x="920" y="860">NO</text>
+  <path class="arrow" d="M640 1005 L545 1005" />
+  <path class="arrow" d="M330 1080 L330 1140" />
+  <path class="arrow" d="M520 1235 L605 1235" />
+  <text class="label" x="535" y="1215">YES</text>
+  <path class="dash" d="M140 1235 C65 1235 65 400 620 410" />
+  <text class="label" x="105" y="1210">NO</text>
+
+  <path class="arrow" d="M900 1305 L900 1375" />
+  <path class="arrow" d="M780 1605 L540 1715" />
+  <text class="label" x="640" y="1660">UP</text>
+  <path class="arrow" d="M1020 1605 L1260 1715" />
+  <text class="label" x="1160" y="1660">DOWN</text>
+  <path class="dash" d="M900 1635 C900 1715 900 1840 900 1925" />
+  <text class="label" x="925" y="1775">PLAYING</text>
+  <path class="dash" d="M625 1505 C500 1505 520 440 620 425" />
+  <text class="label" x="535" y="1480">NO CHANGE</text>
+
+  <path class="arrow" d="M730 1795 C830 1850 860 1875 900 1925" />
+  <path class="arrow" d="M1070 1795 C970 1850 940 1875 900 1925" />
+  <path class="arrow" d="M1175 2030 L1250 2030" />
+  <path class="dash" d="M900 2105 C900 2200 1540 2200 1540 1195" />
+  <text class="label" x="985" y="2180">DONE -&gt; ARMED</text>
+
+  <path class="arrow" d="M520 455 L620 455" />
+  <path class="arrow" d="M305 550 L305 610" />
+  <path class="arrow" d="M520 685 L625 1970" />
+
+  <rect class="box" x="90" y="2130" width="1640" height="105" />
+  <text class="small" x="130" y="2170">Key idea: remote commands require START first. Serial Monitor commands are for manual testing and can play a single sound without remote START.</text>
+  <text class="small" x="130" y="2205">Timing note: the speaker manual does not expose a clear sound-finished event, so the sequence uses UP_SOUND_MS[] / DOWN_SOUND_MS[] delays.</text>
+</svg>
